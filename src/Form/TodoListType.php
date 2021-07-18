@@ -10,14 +10,18 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TodoListType extends abstractType {
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+class TodoListType extends
+    abstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
             ->add("name", TextType::class, ["label" => "Nom de la liste"])
             ->add("color", ColorType::class, ["label" => "Couleur de la liste"]);
     }
 
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults([
             "data_class" => TodoList::class
         ]);

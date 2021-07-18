@@ -14,8 +14,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="List")
  */
-
-
 class TodoList
 {
     /**

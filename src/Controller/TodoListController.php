@@ -10,11 +10,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class TodoListController extends AbstractController {
+class TodoListController extends
+    AbstractController
+{
     /**
      * @Route("/create-list", name="create-list")
      */
-    public function create(Request $request): Response {
+    public function create(Request $request): Response
+    {
         $todoList = new TodoList();
 
         $form = $this->createForm(TodoListType::class, $todoList);
@@ -23,22 +26,40 @@ class TodoListController extends AbstractController {
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($todoList);
-            $em->flush()
-;        }
+            $em->flush();
+        }
         return $this->render("todo_list/create.html.twig", [
             "form" => $form->createView()
         ]);
     }
 
     /**
-     * @Route("/", name="create-list")
+     * @Route("/", name="read_all")
      */
-    public function readAll(): Response {
+    public function readAll(): Response
+    {
         $repo = $this->getDoctrine()->getRepository(TodoList::class);
         $lists = $repo->findAll();
 
         return $this->render("todo_list/index.html.twig", [
-        "lists" => $lists
-    ]);
+            "lists" => $lists
+        ]);
+    }
+
+    /**
+     * @Route("/update-list/{id}", name="update-list")
+     */
+    public function update(TodoList $list, Request $request): Response
+    {
+        $form = $this->createForm(TodoListType::class, $list);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+        }
+        return $this->render("todo_list/create.html.twig", [
+            "form" => $form->createView(),
+            "list" => $list
+        ]);
     }
 }
