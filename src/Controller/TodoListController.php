@@ -14,7 +14,7 @@ class TodoListController extends
     AbstractController
 {
     /**
-     * @Route("/create-list", name="create-list")
+     * @Route("/create-list", name="create_list")
      */
     public function create(Request $request): Response
     {
@@ -27,6 +27,7 @@ class TodoListController extends
             $em = $this->getDoctrine()->getManager();
             $em->persist($todoList);
             $em->flush();
+            return $this->redirectToRoute("read_all");
         }
         return $this->render("todo_list/create.html.twig", [
             "form" => $form->createView()
@@ -47,7 +48,7 @@ class TodoListController extends
     }
 
     /**
-     * @Route("/update-list/{id}", name="update-list")
+     * @Route("/update-list/{id}", name="update_list")
      */
     public function update(TodoList $list, Request $request): Response
     {
@@ -56,10 +57,22 @@ class TodoListController extends
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute("read_all");
         }
         return $this->render("todo_list/create.html.twig", [
             "form" => $form->createView(),
             "list" => $list
         ]);
+    }
+
+    /**
+     * @Route("/delete-list/{id}", name="delete_list")
+     */
+    public function delete(TodoList $list): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($list);
+        $em->flush();
+        return $this->redirectToRoute("read_all");
     }
 }
